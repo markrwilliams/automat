@@ -72,17 +72,19 @@ def makeDigraph(automaton, inputAsString=repr,
                                edge_attr={'fontname': 'Menlo'})
 
     for state in automaton.states():
+        commonNodeArguments = {"name": stateAsString(state),
+                               "shape": "ellipse",
+                               "color": "blue"}
+
         if state is automaton.initialState:
-            stateShape = "bold"
-            fontName = "Menlo-Bold"
+            with digraph.subgraph(graph_attr={"rank": "min"}) as subGraph:
+                subGraph.node(style="bold",
+                              fontName="Menlo-Bold",
+                              **commonNodeArguments)
         else:
-            stateShape = ""
-            fontName = "Menlo"
-        digraph.node(stateAsString(state),
-                     fontame=fontName,
-                     shape="ellipse",
-                     style=stateShape,
-                     color="blue")
+            digraph.node(fontame="Menlo",
+                         **commonNodeArguments)
+
     for n, eachTransition in enumerate(automaton.allTransitions()):
         inState, inputSymbol, outState, outputSymbols = eachTransition
         thisTransition = "t{}".format(n)
